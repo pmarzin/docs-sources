@@ -1,35 +1,69 @@
 # Troubleshooting
 
-## Extended attributes MUST be copied
+**WRITER'S NOTE:** This content needs a new home.
+  Most likely it will be in some "how-to" area as most of the information
+  fits that category.
+  For now, I am leaving it here.
+  The other two board-specific troubleshooting sections have been merged
+  into their respective build topics in the section describing how to
+  build an AGL image.
 
-**IMPORTANT, The extended attribute set during image construction MUST be copied to the SD card.**
+## Including Extended Attributes
 
-When using tar to create the SDcard, it is a common error to not copy the extended attributes. Find below instruction for using tar.
+The
+[Extended Attributes Set (`xattrs`)](https://linux-audit.com/using-xattrs-extended-attributes-on-linux/)
+associated with the image during its construction must be copied to
+the bootable media.
+The `xattrs` supports
+[Smack](https://en.wikipedia.org/wiki/Smack_(software)), which is a
+Simplified Mandatory Access Control kernel.
 
-Verify that **tar** version is 1.28 or newer:
+**NOTE:** See
+  [https://www.kernel.org/doc/Documentation/security/Smack.txt](https://www.kernel.org/doc/Documentation/security/Smack.txt).
+  for detailed information on Smack.
 
-```bash
-tar --version
-tar (GNU tar) 1.28
-[snip]
-```
+Many methods exist that allow you to create bootable media (e.g. `dd`, `bmaptools`,
+`tar`, and AGL-provided scripts such as `mkabl-agl.sh` and `mkefi-agl.sh`).
+It is recommended that you do not use `tar` to create bootable media.
+However, if you do, you must take these steps to copy `xattrs` to the media:
 
-If it is not the case, a native up-to-date version of tar is also generated while building AGL distribution:
+1. Verify your `tar` version is 1.28 or newer:
 
-```bash
-tmp/sysroots/x86_64-linux/usr/bin/tar-native/tar --version
-tar (GNU tar) 1.28
-[snip]
-```
+   ```bash
+   $ tar --version
+   tar (GNU tar) 1.28
+   [snip]
+   ```
 
-To copy Automotive Grade Linux (AGL) files AND EXTENDED ATRIBUTES onto the SDcard using tar the command is:
+2. Optionally update `tar` if required.
+   Most systems come with `tar` installed.
+   If you need to install it, see the
+   "[Installing tar](https://www.howtoforge.com/tutorial/linux-tar-command/#installing-tar)"
+   section for instructions.
 
-```bash
-tar --extract --xz --numeric-owner --preserve-permissions --preserve-order --totals \
-           --xattrs-include='*' --directory=DESTINATION_DIRECTORY --file=agl-demo-platform.....tar.xz
-```
+   When you build an AGL distribution, a native up-to-date version of
+   `tar` is created.
+   Use the following command to see that version:
 
+   ```bash
+   $ tmp/sysroots/x86_64-linux/usr/bin/tar-native/tar --version
+   tar (GNU tar) 1.28
+   [snip]
+   ```
+
+3. Copy the AGL files and Extended Attributes Set to your bootable media:
+
+   ```bash
+   $ tar --extract --xz --numeric-owner --preserve-permissions --preserve-order --totals \
+              --xattrs-include='*' --directory=DESTINATION_DIRECTORY --file=agl-demo-platform.....tar.xz
+   ```
+
+<!--
 ## meta-rust
+
+**WRITER NOTE:** This bug no longer applies.  The people that maintain meta-rust have fixed it.
+See https://github.com/meta-rust/meta-rust/commit/39fd00119cf9267bc6b381d0b7abeebda31faf4e and
+https://github.com/meta-rust/meta-rust/pull/93.
 
 Due to a known bug in the upstream of meta-rust the Yocto/OE recipe for rust-cross may fail while building RVI SOTA Client or another application written in the Rust programming language.
 Until the complete resolution of the issue the workaround is to disable all use of the CXX11 ABI by applying the following lines to **conf/local.conf**:
@@ -42,6 +76,7 @@ CXXFLAGS_append = " -D_GLIBCXX_USE_CXX11_ABI=0"
 BUILD_CXXFLAGS_remove_pn-gcc-runtime = "-D_GLIBCXX_USE_CXX11_ABI=0"
 TARGET_CXXFLAGS_remove_pn-gcc-runtime = "-D_GLIBCXX_USE_CXX11_ABI=0" CXXFLAGS_remove_pn-gcc-runtime = "-D_GLIBCXX_USE_CXX11_ABI=0"
 ```
+-->
 
 ## Screen orientation for Splash and in Weston
 
