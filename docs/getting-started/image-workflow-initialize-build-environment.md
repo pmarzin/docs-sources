@@ -62,8 +62,6 @@ Available features:
        eas
 ```
 
-To find out exactly what a feature provides, **WE NEED SOME GUIDANCE HERE.  MAYBE SOME INDIVIDUAL README FILES LOCATED IN THE TEMPLATE AREAS FOR THE FEATURES**.
-
 An AGL feature is a configuration that accounts for specific settings
 and dependencies needed for a particular build.
 For example, specifying the "agl-demo" feature makes sure that the
