@@ -1,12 +1,6 @@
 # Troubleshooting
 
-**WRITER'S NOTE:** This content needs a new home.
-  Most likely it will be in some "how-to" area as most of the information
-  fits that category.
-  For now, I am leaving it here.
-  The other two board-specific troubleshooting sections have been merged
-  into their respective build topics in the section describing how to
-  build an AGL image.
+This section provides information about areas that can cause issues.
 
 ## Including Extended Attributes
 
